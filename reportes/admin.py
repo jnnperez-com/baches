@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Reporte
+
+class ReporteyAdmin(admin.ModelAdmin):
+	search_fields =('name',)
+
+admin.site.register(Reporte, ReporteyAdmin)
