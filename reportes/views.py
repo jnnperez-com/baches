@@ -31,12 +31,8 @@ class Userviewset(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Este no es su usuario'},status=status.HTTP_403_FORBIDDEN)
 
+
 class ReporteViewSet(viewsets.ModelViewSet):
-	queryset = Reporte.objects.all()
-	serializer_class = ReporteSerializer
-
-
-class CrimetraceViewSet(viewsets.ModelViewSet):
     serializer_class = ReporteSerializer
     permission_classes = [permissions.DjangoModelPermissions]
     queryset = Reporte.objects.all()
@@ -45,10 +41,10 @@ class CrimetraceViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         print(request.user)
-        return super(CrimetraceViewSet, self).list(request, *args, **kwargs)
+        return super(ReporteViewSet, self).list(request, *args, **kwargs)
 
 
     def perform_create(self, serializer):
        # print(self.get_object())
-        serializer.save(ct_iduser=self.request.user,)
+        serializer.save(owner=self.request.user,)
 
