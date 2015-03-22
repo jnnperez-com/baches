@@ -24,10 +24,29 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
+
+STATIC_URL = '/static/'
+#Debug
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.DefaultStorageFinder',)
+# Application definition
+
+MEDIA_ROOT = os.sep.join(os.path.abspath(__file__).split(os.sep)[:-2] + ['media'])
+MEDIA_URL = '/media/'
 
 # Application definition
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+#   'django.core.context_processors.media', #Production
+#   'django.core.context_processors.static', #Pruduction
+)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -36,6 +55,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'reportes',
+
+    'rest_framework',
+    'rest_framework.authtoken',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,4 +103,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.permissions.AllowAny',       
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        
+    ),
+        #this bit makes the magic.
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #      #UnicodeJSONRenderer has an ensure_ascii = False attribute,
+    #      #thus it will not escape characters.
+    #     'rest_framework.renderers.UnicodeJSONRenderer',
+    #      #You only need to keep this one if you're using the browsable API
+    #     'rest_framework.renderers.BrowsableAPIRenderer',
+    # ),
+} 
+
+
